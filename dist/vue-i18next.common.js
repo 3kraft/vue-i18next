@@ -118,7 +118,7 @@ function parseValue(value) {
 
   if (typeof value === 'string') {
     path = value;
-  } else if (toString.call(value) === '[object Object]') {
+  } else if (Object.prototype.toString.call(value) === '[object Object]') {
     path = value.path;
     language = value.language;
     args = value.args;
@@ -419,7 +419,7 @@ VueI18n.prototype.onI18nChanged = function onI18nChanged () {
 Object.defineProperties( VueI18n.prototype, prototypeAccessors );
 
 VueI18n.install = install;
-VueI18n.version = "0.15.0";
+VueI18n.version = "0.4.0-development";
 
 /* istanbul ignore if */
 if (typeof window !== 'undefined' && window.Vue) {
