@@ -37,7 +37,7 @@ function parseValue(value) {
 
   if (typeof value === 'string') {
     path = value;
-  } else if (toString.call(value) === '[object Object]') {
+  } else if (Object.prototype.toString.call(value) === '[object Object]') {
     path = value.path;
     language = value.language;
     args = value.args;
