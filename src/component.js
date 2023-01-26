@@ -4,27 +4,32 @@ export default {
   props: {
     tag: {
       type: String,
-      default: 'span',
+      default: 'span'
     },
     path: {
       type: String,
-      required: true,
+      required: true
     },
     options: {
-      type: Object,
-    },
+      type: Object
+    }
   },
   render(h, { props, data, children, parent }) {
     const i18next = parent.$i18n;
-    if (!i18next) {
+    const $t = parent.$t.bind(parent);
+    if (!i18next || !$t) {
       return h(props.tag, data, children);
     }
 
-    const path = props.path;
+    const { path } = props;
     const options = props.options || {};
 
     const REGEXP = i18next.i18next.services.interpolator.regexp;
-    const format = i18next.t(path, { ...options, interpolation: { prefix: '#$?', suffix: '?$#' } });
+    const i18nextOptions = {
+      ...options,
+      interpolation: { prefix: '#$?', suffix: '?$#' }
+    };
+    const format = $t(path, i18nextOptions);
     const tchildren = [];
 
     format.split(REGEXP).reduce((memo, match, index) => {
@@ -35,9 +40,15 @@ export default {
         child = match;
       } else {
         const place = match.trim();
+        // eslint-disable-next-line no-restricted-globals
         if (isNaN(parseFloat(place)) || !isFinite(place)) {
-          children.forEach((e) => {
-            if (!child && e.data.attrs && e.data.attrs.place && e.data.attrs.place === place) {
+          children.forEach(e => {
+            if (
+              !child &&
+              e.data.attrs &&
+              e.data.attrs.place &&
+              e.data.attrs.place === place
+            ) {
               child = e;
             }
           });
@@ -51,5 +62,5 @@ export default {
     }, tchildren);
 
     return h(props.tag, data, tchildren);
-  },
+  }
 };
